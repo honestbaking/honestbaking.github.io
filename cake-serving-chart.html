@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cake Serving Chart and Price Calculator (Free) | HonestBaking</title>
+<meta name="description" content="Free cake serving chart for round, square, sheet and tiered cakes, party and wedding slices. Add your price per serving to get a price for every size.">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="assets/logo.png">
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <img src="assets/logo.png" alt="HonestBaking logo"><a href="index.html">HonestBaking</a>
+  <nav><a href="cake-serving-chart.html">Cake serving chart</a><a href="cake-price-calculator.html">Cake price calculator</a><a data-link="shop" href="https://honestbaking.etsy.com">Etsy shop</a></nav>
+</div></header>
+
+<main><div class="wrap">
+<h1>Cake serving chart and price list</h1>
+<p class="lead">How many slices each cake size gives, in party and wedding cuts, and what each size costs at your price per serving.</p>
+
+<div class="card grid">
+  <div>
+    <label for="cut">Slice size</label>
+    <select id="cut">
+      <option value="party">Party slices (1.5 x 2 in)</option>
+      <option value="wedding">Wedding slices (1 x 2 in)</option>
+    </select>
+  </div>
+  <div>
+    <label for="pps">Your price per serving <small>(optional, $)</small></label>
+    <input id="pps" type="number" min="0" step="0.05" inputmode="decimal" placeholder="e.g. 6.50">
+  </div>
+  <div>
+    <label for="round">Round prices up to</label>
+    <select id="round">
+      <option value="0">No rounding</option>
+      <option value="1" selected>Nearest $1</option>
+      <option value="5">Nearest $5</option>
+    </select>
+  </div>
+</div>
+
+<p><button type="button" class="button" onclick="window.print()">Print this chart</button></p>
+<table id="chart" aria-describedby="chart-note">
+  <thead><tr><th>Shape</th><th>Size</th><th class="num">Servings</th><th class="num">Price</th></tr></thead>
+  <tbody></tbody>
+</table>
+<p class="note" id="chart-note">Serving counts follow the Wilton cake serving guide for cakes about 4 inches tall (two layers). Wilton does not list an 18 x 24 inch sheet; it is counted here as two 12 x 18 half sheets. Cakes under 3 inches tall serve about half as many. Tiered cakes are round tiers added together.</p>
+
+<div class="cta">
+  <h2>Where does the price per serving come from?</h2>
+  <p>A price per serving only works if it covers your ingredients, packaging, time, overhead and card fees. The <strong>Cake Pricing Calculator</strong> spreadsheet (Excel and Google Sheets) works that out for each cake from your own ingredient prices, then fills this same size and tier price list with your number, and prints a customer quote.</p>
+  <a class="button" data-link="cake" href="https://honestbaking.etsy.com">See the Cake Pricing Calculator on Etsy</a>
+  <p class="note">Or start with a rough figure from the <a href="cake-price-calculator.html">free cake price calculator</a>.</p>
+</div>
+</div></main>
+
+<footer><div class="wrap">Made by HonestBaking, a small shop of spreadsheet tools for home bakers. Built with AI assistance and checked by the shop owner. No cookies, no tracking.</div></footer>
+
+<script src="assets/servings.js"></script>
+<script src="assets/calc.js"></script>
+<script src="assets/links.js"></script>
+<script>
+(function () {
+  var body = document.querySelector("#chart tbody");
+  function row(cells, cls) {
+    var tr = document.createElement("tr");
+    if (cls) tr.className = cls;
+    cells.forEach(function (c, i) {
+      var td = document.createElement("td");
+      td.textContent = c;
+      if (i >= 2) td.className = "num";
+      if (cls === "group") td.colSpan = 4;
+      tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  }
+  function draw() {
+    var cut = document.getElementById("cut").value;
+    var pps = parseFloat(document.getElementById("pps").value);
+    var step = parseFloat(document.getElementById("round").value);
+    var price = function (n) { return pps > 0 ? HB.money(HB.roundUp(n * pps, step)) : "-"; };
+    body.innerHTML = "";
+    row(["Single cakes (two layers, about 4 in tall)"], "group");
+    SERVINGS.singles.forEach(function (s) { row([s.kind, s.size, String(s[cut]), price(s[cut])]); });
+    row(["Tiered cakes (round tiers)"], "group");
+    SERVINGS.tiers.forEach(function (t) { row([t.kind, t.size, String(t[cut]), price(t[cut])]); });
+  }
+  ["cut", "pps", "round"].forEach(function (id) { document.getElementById(id).addEventListener("input", draw); });
+  draw();
+})();
+</script>
+</body>
+</html>

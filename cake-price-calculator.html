@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cake Pricing Calculator: What to Charge and What You Really Earn per Hour (Free) | HonestBaking</title>
+<meta name="description" content="Free cake pricing calculator for home bakers. Ingredients, packaging, your hours, overhead, profit and card fees in; a suggested price, price per serving and your real hourly pay out.">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="assets/logo.png">
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <img src="assets/logo.png" alt="HonestBaking logo"><a href="index.html">HonestBaking</a>
+  <nav><a href="cake-serving-chart.html">Cake serving chart</a><a href="cake-price-calculator.html">Cake price calculator</a><a data-link="shop" href="https://honestbaking.etsy.com">Etsy shop</a></nav>
+</div></header>
+
+<main><div class="wrap">
+<h1>Cake pricing calculator: what to charge, and what you really earn per hour</h1>
+<p class="lead">A quick estimate of what to charge for one cake: every cost, your time at a fair rate, a profit margin and card fees, and what you really earn per hour at that price.</p>
+
+<div class="tiles" aria-live="polite">
+  <div class="tile"><div class="k">Suggested price</div><div class="v" id="t-price">-</div></div>
+  <div class="tile"><div class="k" id="k-serving">Price per serving</div><div class="v" id="t-serving">-</div></div>
+  <div class="tile"><div class="k" id="k-hour">What you earn per hour</div><div class="v" id="t-hour">-</div></div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>This cake</h2>
+    <label for="ownPrice">Price you charge now <small>(optional, $)</small></label><input id="ownPrice" type="number" min="0" step="1" inputmode="decimal" placeholder="blank = use the suggested price">
+    <label for="ingredients">Ingredients <small>($)</small></label><input id="ingredients" type="number" min="0" step="0.01" inputmode="decimal" value="25">
+    <label for="packaging">Packaging: board, box, supports <small>($)</small></label><input id="packaging" type="number" min="0" step="0.01" inputmode="decimal" value="5">
+    <label for="delivery">Delivery cost <small>($, 0 for pickup)</small></label><input id="delivery" type="number" min="0" step="0.01" inputmode="decimal" value="0">
+    <label for="hours">Hours of work: shopping, baking, decorating, cleanup, customer contact</label><input id="hours" type="number" min="0" step="0.25" inputmode="decimal" value="5">
+    <label for="servings">Servings</label><input id="servings" type="number" min="0" step="1" inputmode="numeric" value="24">
+  </div>
+  <div class="card">
+    <h2>Your rates</h2>
+    <label for="rate">Hourly rate for your time <small>($ per hour)</small></label><input id="rate" type="number" min="0" step="0.5" inputmode="decimal" value="20">
+    <label for="overhead">Overhead per hour of work <small>($: oven, power, equipment, insurance)</small></label><input id="overhead" type="number" min="0" step="0.25" inputmode="decimal" value="3">
+    <label for="markup">Profit markup on top of all costs <small>(%)</small></label><input id="markup" type="number" min="0" step="1" inputmode="decimal" value="30">
+    <label for="feePct">Card fee <small>(%)</small></label><input id="feePct" type="number" min="0" max="50" step="0.1" inputmode="decimal" value="2.9">
+    <label for="feeFixed">Card fee per payment <small>($)</small></label><input id="feeFixed" type="number" min="0" step="0.01" inputmode="decimal" value="0.30">
+    <label for="roundTo">Round the price up to</label>
+    <select id="roundTo"><option value="0">No rounding</option><option value="1" selected>Nearest $1</option><option value="5">Nearest $5</option><option value="10">Nearest $10</option></select>
+  </div>
+</div>
+
+<h2>Where the price goes</h2>
+<table class="breakdown">
+  <thead><tr><th>Part</th><th class="num">Amount</th><th class="num">Share of price</th></tr></thead>
+  <tbody id="parts"></tbody>
+</table>
+<p class="note">Card fees are added so they come out of the customer's price, not your profit. Your time counts as a cost, so the profit is on top of your pay.</p>
+
+<div class="cta">
+  <h2>Pricing every cake, not just this one?</h2>
+  <p>The <strong>Cake Pricing Calculator</strong> spreadsheet (Excel and Google Sheets) costs each cake from your own ingredient price list, so the ingredients figure is exact instead of a guess. It also turns your price per serving into a price list for 13 sizes and 7 tier combinations, and fills in a customer quote with deposit and balance.</p>
+  <a class="button" data-link="cake" href="https://honestbaking.etsy.com">See the Cake Pricing Calculator on Etsy</a>
+  <p class="note">Need serving counts? The <a href="cake-serving-chart.html">free cake serving chart</a> lists them for every size.</p>
+</div>
+</div></main>
+
+<footer><div class="wrap">Made by HonestBaking, a small shop of spreadsheet tools for home bakers. Built with AI assistance and checked by the shop owner. Uses the same formulas as the spreadsheet. An estimate, not financial advice. No cookies, no tracking.</div></footer>
+
+<script src="assets/calc.js"></script>
+<script src="assets/links.js"></script>
+<script>
+(function () {
+  var ids = ["ingredients", "packaging", "delivery", "hours", "servings", "ownPrice", "rate", "overhead", "markup", "feePct", "feeFixed", "roundTo"];
+  var v = function (id) { var x = parseFloat(document.getElementById(id).value); return isFinite(x) && x > 0 ? x : 0; };
+  function draw() {
+    var i = { ingredients: v("ingredients"), packaging: v("packaging"), delivery: v("delivery"), hours: v("hours"),
+              servings: v("servings"), ownPrice: v("ownPrice"), rate: v("rate"), overhead: v("overhead"),
+              markup: v("markup") / 100, feePct: Math.min(v("feePct"), 50) / 100, feeFixed: v("feeFixed"), roundTo: v("roundTo") };
+    var r = HB.cakePrice(i);
+    var own = i.ownPrice > 0;   // the first tile is always the suggested price; the other two are at the price in use
+    document.getElementById("t-price").textContent = HB.money(r.suggested);
+    document.getElementById("k-serving").textContent = own ? "Per serving at your price" : "Price per serving";
+    document.getElementById("k-hour").textContent = own ? "What you earn per hour at your price" : "What you earn per hour";
+    document.getElementById("t-serving").textContent = r.perServing === null ? "-" : HB.money(r.perServing);
+    document.getElementById("t-hour").textContent = r.perHour === null ? "-" : HB.money(r.perHour);
+    var parts = [["Ingredients", i.ingredients], ["Packaging", i.packaging], ["Delivery", i.delivery], ["Your time", r.time],
+                 ["Overhead", r.overhead], ["Profit", r.profit], ["Card fees", r.fees]];
+    // show whole cents that add up to the price: every part rounded, profit shown as the remainder
+    var cents = function (x) { return Math.round(x * 100 + 1e-7) / 100; }, others = 0;
+    parts.forEach(function (p, k) { if (k !== 5) { p[1] = cents(p[1]); others += p[1]; } });
+    parts[5][1] = cents(r.price - others);
+    var tb = document.getElementById("parts");
+    tb.innerHTML = "";
+    parts.concat([[own ? "Your price" : "Price", r.price]]).forEach(function (p, k) {
+      var tr = document.createElement("tr");
+      if (k === parts.length) tr.style.fontWeight = "bold";
+      [p[0], HB.money(p[1]), r.price > 0 ? (p[1] / r.price * 100).toFixed(1) + "%" : "-"].forEach(function (c, j) {
+        var td = document.createElement("td"); td.textContent = c; if (j) td.className = "num"; tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    });
+  }
+  ids.forEach(function (id) { document.getElementById(id).addEventListener("input", draw); });
+  draw();
+})();
+</script>
+</body>
+</html>

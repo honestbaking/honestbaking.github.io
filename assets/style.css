@@ -1,0 +1,56 @@
+/* HonestBaking free tools: same colours as the spreadsheets (rose headers, yellow inputs, green results). */
+:root {
+  --rose: #7a3b46; --rose-light: #f6e7ea; --rose-line: #e2c6cc;
+  --cream: #fbf6f2; --ink: #2b2b2b; --muted: #6b6464;
+  --input: #fff6c9; --input-line: #e8d58e; --result: #e3f1e3; --result-line: #a8d0a8; --result-ink: #1e5631;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--cream); color: var(--ink); font: 16px/1.55 Arial, Helvetica, sans-serif; }
+a { color: var(--rose); }
+header.site { background: var(--rose); color: #fff; }
+header.site .wrap { display: flex; align-items: center; gap: 14px; padding: 12px 20px; }
+header.site img { width: 44px; height: 44px; border-radius: 50%; }
+header.site a { color: #fff; text-decoration: none; font: bold 20px Georgia, serif; }
+header.site nav { margin-left: auto; display: flex; gap: 18px; flex-wrap: wrap; }
+header.site nav a { font: 15px Arial, sans-serif; opacity: .9; }
+.wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+main { padding: 28px 0 40px; }
+h1, h2 { font-family: Georgia, "Times New Roman", serif; color: var(--rose); line-height: 1.2; }
+h1 { font-size: 34px; margin: 6px 0 8px; border-bottom: 2px solid var(--rose); padding-bottom: 10px; }
+h2 { font-size: 22px; margin: 32px 0 10px; }
+.lead { font-size: 18px; color: var(--muted); margin: 0 0 22px; }
+.card { background: #fff; border: 1px solid var(--rose-line); border-radius: 10px; padding: 20px 22px; margin: 18px 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+label { display: block; font-weight: bold; font-size: 14px; margin: 10px 0 4px; }
+label small { font-weight: normal; color: var(--muted); }
+input, select { width: 100%; font: 16px Arial, sans-serif; padding: 9px 10px; border-radius: 6px; }
+input { background: var(--input); border: 1px solid var(--input-line); color: #1f4e9c; }
+select { background: #fff; border: 1px solid var(--rose-line); }
+input:focus, select:focus { outline: 2px solid var(--rose); outline-offset: 1px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 6px 0 4px; }
+.tile { border: 1px solid var(--result-line); border-radius: 8px; overflow: hidden; background: var(--result); text-align: center; }
+.tile .k { background: var(--rose-light); color: var(--rose); font-weight: bold; font-size: 13px; padding: 6px 4px; border-top: 3px solid var(--rose); }
+.tile .v { color: var(--result-ink); font-weight: bold; font-size: 26px; padding: 10px 4px; }
+table { width: 100%; border-collapse: collapse; background: #fff; font-size: 15px; }
+th { background: var(--rose-light); color: var(--rose); text-align: left; padding: 8px 10px; border-bottom: 2px solid var(--rose); }
+td { padding: 7px 10px; border-bottom: 1px solid #ece4e2; }
+td.num, th.num { text-align: right; }
+tr.group td { background: var(--rose); color: #fff; font-weight: bold; }
+.breakdown td.num { width: 30%; }
+.cta { background: #fff; border: 2px solid var(--rose); border-radius: 10px; padding: 18px 22px; margin: 28px 0; }
+.cta h2 { margin-top: 0; }
+.button { display: inline-block; background: var(--rose); color: #fff; text-decoration: none; font-weight: bold; padding: 11px 18px; border-radius: 6px; margin-top: 6px; }
+.note { font-size: 14px; color: var(--muted); }
+footer { border-top: 1px solid var(--rose-line); padding: 18px 0 30px; font-size: 13px; color: var(--muted); }
+button.button { border: 0; cursor: pointer; font: bold 16px Arial, sans-serif; }
+@media print {
+  header.site, .cta, footer, button, .button, .lead { display: none; }
+  body { background: #fff; font-size: 12px; }
+  main { padding: 0; }
+  h1 { font-size: 22px; }
+  .card { border: 0; padding: 0; margin: 0 0 8px; }
+  input, select { border: 0; background: none; padding: 0; color: #000; }
+  table { font-size: 11px; }
+  td, th { padding: 3px 6px; }
+  tr.group td { background: #fff; color: var(--rose); border-bottom: 2px solid var(--rose); }
+}
